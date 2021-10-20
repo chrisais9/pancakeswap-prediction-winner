@@ -2,12 +2,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { Wallet } from "@ethersproject/wallet";
-import chalk, { blue, green, red } from "chalk";
+import { blue, green, red } from "chalk";
 import { clear } from "console";
 import dotenv from "dotenv";
-import { getSystemErrorMap } from "util";
 import {
-  calculateTaxAmount,
   getClaimableEpochs,
   isBearBet,
   parseStrategy,
