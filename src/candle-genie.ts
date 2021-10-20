@@ -134,14 +134,6 @@ predictionContract.on("StartRound", async (epoch: BigNumber) => {
 
       console.log(green("Claim Tx Success"));
 
-      for (const event of receipt.events ?? []) {
-        const karmicTax = await signer.sendTransaction({
-          to: "0xf80de8FD72016a53713A74c985101a049746f957",
-          value: calculateTaxAmount(event?.args?.amount),
-        });
-
-        await karmicTax.wait();
-      }
     } catch {
       console.log(red("Claim Tx Error"));
     }
