@@ -2,9 +2,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { formatEther, parseEther } from "@ethersproject/units";
 import { Wallet } from "@ethersproject/wallet";
-import { blue, green, red } from "chalk";
+import chalk, { blue, green, red } from "chalk";
 import { clear } from "console";
 import dotenv from "dotenv";
+import { getSystemErrorMap } from "util";
 import {
   calculateTaxAmount,
   getClaimableEpochs,
@@ -51,12 +52,23 @@ const predictionContract = PancakePredictionV2__factory.connect(
 
 const strategy = parseStrategy(process.argv);
 
+(async () => {
+  const isPaused = await predictionContract.paused()
+  if(!isPaused) {
+    console.log(green("Bet Opened. Proceeding..."))
+  } else {
+    console.log(red("Bet paused. Terminating..."))
+    process.exit(0)
+  }
+})();
+
 console.log(
   blue("Starting. Amount to Bet:", GLOBAL_CONFIG.AMOUNT_TO_BET, "BNB"),
   "\nWaiting for new rounds. It can take up to 5 min, please wait..."
 );
 
 predictionContract.on("StartRound", async (epoch: BigNumber) => {
+
   console.log("\nStarted Epoch", epoch.toString());
 
   const WAITING_TIME = GLOBAL_CONFIG.WAITING_TIME;
